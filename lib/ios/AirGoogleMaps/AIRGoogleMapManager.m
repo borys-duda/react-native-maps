@@ -340,16 +340,32 @@ RCT_EXPORT_METHOD(takeSnapshot:(nonnull NSNumber *)reactTag
   
   CGPoint touchPoint = [recognizer locationInView:map];
   CLLocationCoordinate2D coord = [map.projection coordinateForPoint:touchPoint];
-  map.onPanDrag(@{
-                  @"coordinate": @{
-                      @"latitude": @(coord.latitude),
-                      @"longitude": @(coord.longitude),
-                      },
-                  @"position": @{
-                      @"x": @(touchPoint.x),
-                      @"y": @(touchPoint.y),
-                      },
-                  });
+  if(recognizer.state == UIGestureRecognizerStateEnded)
+  {
+    map.onPanDrag(@{
+                    @"coordinate": @{
+                        @"latitude": @(coord.latitude),
+                        @"longitude": @(coord.longitude),
+                        },
+                    @"position": @{
+                        @"x": @(touchPoint.x),
+                        @"y": @(touchPoint.y),
+                        },
+                    @"action":@"dragend"
+                    });
+  } else {
+    map.onPanDrag(@{
+                    @"coordinate": @{
+                        @"latitude": @(coord.latitude),
+                        @"longitude": @(coord.longitude),
+                        },
+                    @"position": @{
+                        @"x": @(touchPoint.x),
+                        @"y": @(touchPoint.y),
+                        },
+                    @"action":@"dragging"
+                    });
+  }
   
 }
 @end
